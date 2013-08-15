@@ -1,0 +1,125 @@
+package org.drools.scorecards.example;
+
+import java.util.*;
+import org.drools.scorecards.DroolsScorecard;
+import org.drools.scorecards.PartialScore;
+import org.drools.scorecards.InitialScore;
+import org.drools.scorecards.BaselineScore;
+
+declare DroolsScorecard
+end
+
+declare SampleScore extends DroolsScorecard
+	age : int
+	occupation : String
+	residenceState : String
+	validLicense : boolean
+end
+
+rule "AgeScore_lessOrEqual_5"
+	salience 99
+	when
+		$sc : SampleScore(age <= 5)
+	then
+		insertLogical(new PartialScore("SampleScore","age",10.0));
+end
+
+rule "AgeScore_between_5_12"
+	salience 99
+	when
+		$sc : SampleScore(age >= 5 &&  < 12)
+	then
+		insertLogical(new PartialScore("SampleScore","age",30.0));
+end
+
+rule "AgeScore_between_13_44"
+	salience 99
+	when
+		$sc : SampleScore(age >= 13 &&  < 44)
+	then
+		insertLogical(new PartialScore("SampleScore","age",40.0));
+end
+
+rule "AgeScore_greaterOrEqual_45"
+	salience 99
+	when
+		$sc : SampleScore(age >= 45)
+	then
+		insertLogical(new PartialScore("SampleScore","age",25.0));
+end
+
+rule "OccupationScore_equal_SKYDIVER"
+	// skydiving is a risky occupation
+	salience 99
+	when
+		$sc : SampleScore(occupation == "SKYDIVER")
+	then
+		insertLogical(new PartialScore("SampleScore","occupation",-10.0));
+end
+
+rule "OccupationScore_isIn_TEACHER_INSTRUCTOR"
+	salience 99
+	when
+		$sc : SampleScore(occupation in ( "TEACHER","INSTRUCTOR" ))
+	then
+		insertLogical(new PartialScore("SampleScore","occupation",10.0));
+end
+
+rule "OccupationScore_equal_PROGRAMMER"
+	salience 99
+	when
+		$sc : SampleScore(occupation == "PROGRAMMER")
+	then
+		insertLogical(new PartialScore("SampleScore","occupation",5.0));
+end
+
+rule "ResidenceStateScore_equal_AP"
+	salience 99
+	when
+		$sc : SampleScore(residenceState == "AP")
+	then
+		insertLogical(new PartialScore("SampleScore","residenceState",-10.0));
+end
+
+rule "ResidenceStateScore_equal_KN"
+	salience 99
+	when
+		$sc : SampleScore(residenceState == "KN")
+	then
+		insertLogical(new PartialScore("SampleScore","residenceState",10.0));
+end
+
+rule "ResidenceStateScore_equal_TN"
+	salience 99
+	when
+		$sc : SampleScore(residenceState == "TN")
+	then
+		insertLogical(new PartialScore("SampleScore","residenceState",5.0));
+end
+
+rule "ValidLicenseScore_equal_TRUE"
+	salience 99
+	when
+		$sc : SampleScore(validLicense == true)
+	then
+		insertLogical(new PartialScore("SampleScore","validLicense",1.0));
+end
+
+rule "ValidLicenseScore_equal_FALSE"
+	salience 99
+	when
+		$sc : SampleScore(validLicense == false)
+	then
+		insertLogical(new PartialScore("SampleScore","validLicense",-1.0));
+end
+
+rule "calculateTotalScore"
+	salience 1
+	when
+		$calculatedScore : Double() from accumulate (PartialScore(scorecardName =="SampleScore", $partialScore:score), sum($partialScore))
+		$sc : SampleScore()
+	then
+		$sc.setCalculatedScore($calculatedScore);
+end
+
+

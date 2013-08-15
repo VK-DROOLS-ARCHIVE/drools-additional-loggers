@@ -1,0 +1,36 @@
+<head>
+<style>
+body {
+font-family: verdana;
+font-size: 12px;
+}
+#orange {
+  background-color: #FF3333;
+  border: 1px solid #FF3333;
+  padding: 2px;
+  height: 40%;
+  display:inline;
+  font-size:2pt;
+  vertical-align: middle;
+}
+#green {
+  background-color: #33FF00;
+  border: 1px solid #009900;
+  padding: 2px;
+  height: 40%;
+  display:inline;
+  font-size:2pt;
+  vertical-align: middle;
+}
+#blue {
+  background-color: #3300FF;
+  border: 1px solid #000099;
+  padding: 2px;
+  display:inline;
+  font-size:2pt;
+  vertical-align: middle;
+  margin-left:50px;
+  margin-top:10px;
+}
+</style>
+</head>
